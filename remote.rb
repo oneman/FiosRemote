@@ -519,7 +519,7 @@ sock.write [construct_fios_remote_packet_init().join ''].pack('H*')
 puts "Expecting / printing response"
 data = sock.recvfrom( 2220 )[0].chomp
 if data
-   puts data.to_s
+   puts data.unpack("H*")
 end
 
 puts "Expecting / printing packet with control code"
@@ -544,12 +544,12 @@ end
 #sock.write [construct_fios_remote_packet_init2().join ''].pack('H*')
 #sock.flush
 #sleep 1
-
 # puts "Expecting / printing response"
 # data = sock.recvfrom( 2220 )[0].chomp
 # if data
-#  puts data
+#  puts data.unpack("H*")
 # end
+
 
 puts "sending png image"
 sock.write [construct_fios_remote_packet_PNG().join ''].pack('H*')
@@ -558,7 +558,7 @@ sock.flush
  puts "Expecting / printing response"
  data = sock.recvfrom( 2220 )[0].chomp
  if data
-  puts data
+  puts data.unpack("H*")
  end
 
 puts "Entering loop state"
@@ -571,7 +571,7 @@ while true
  puts "Expecting / printing response"
  data = sock.recvfrom( 2220 )[0].chomp
  if data
-  puts data
+  puts data.unpack("H*")
  end
 
 
@@ -585,17 +585,17 @@ while true
 # end
 
 
- sleep 3
+ sleep 10
  
 
 
 
- puts "sending channel down command"
- sock.write [construct_fios_remote_packet_chandown().join ''].pack('H*')
- puts "Expecting / printing response"
- data = sock.recvfrom( 2220 )[0].chomp
- if data
-  puts data
- end
+# puts "sending channel down command"
+# sock.write [construct_fios_remote_packet_chandown().join ''].pack('H*')
+# puts "Expecting / printing response"
+# data = sock.recvfrom( 2220 )[0].chomp
+# if data
+#  puts data.unpack("H*")
+# end
 
 end
