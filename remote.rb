@@ -62,6 +62,9 @@ end
 
 def construct_fios_remote_packet_init2()
 #newtime()
+
+init2_control_word = %w{62 75 11 73 f6 5c b5 d2 71 62 ef b7 54 be 8c ef 09 e2 86 67}
+
                                               #nope                 # 00 or 01 before 0a?
 init_payload2 = %w{56 02 02 01 00 04 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -69,7 +72,7 @@ init_payload2 = %w{56 02 02 01 00 04 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 01 0a 00            
 00 00 00 00 00 6c 12 00 01 02 01 00 02 53 52 04
 00 01 01 05 00 01 00 06 00 04 00 00 00 13 07 00
-20} + $control_word + %w{00 00 00 00 00 00 00 00 00 00 00
+20} + init2_control_word + %w{00 00 00 00 00 00 00 00 00 00 00
 00 0b 00 04 00 00 00 00 0c 00 02 00 00 0d 00 04
 00 00 00 00 0e 00 04 00 00 00 00 0f 00 06 00 00
 00 00 00 00 10 00 04 00 00 00 00 11 00 04 00 00
@@ -494,7 +497,7 @@ cd 22 a9 f5 38 6e 0b 7f 4f 9c f8 71 dc c3 88 7a
 00 00 00 49 45 4e 44 ae 42 60 82}
 
 
-png_payload = [png_packet_header, connecting_png_image].flatten
+png_payload = png_packet_header + connecting_png_image
 
 return png_payload
 
@@ -539,12 +542,24 @@ end
 
 #puts "sending init2 packet"
 #sock.write [construct_fios_remote_packet_init2().join ''].pack('H*')
+#sock.flush
+#sleep 1
 
-sleep 1
+# puts "Expecting / printing response"
+# data = sock.recvfrom( 2220 )[0].chomp
+# if data
+#  puts data
+# end
+
 puts "sending png image"
 sock.write [construct_fios_remote_packet_PNG().join ''].pack('H*')
 
-
+sock.flush
+ puts "Expecting / printing response"
+ data = sock.recvfrom( 2220 )[0].chomp
+ if data
+  puts data
+ end
 
 puts "Entering loop state"
 while true
