@@ -208,7 +208,7 @@ def construct_fios_remote_packet_chandown()
 #newtime()
 
 channel_down_payload = %w{56 02 02 01 00 1d 00 00} + [$hours, $minutes, $seconds] + %w{00 00 00 00 00 
-00 c0 a8 01 02 00 00 c0 a8 01 66 00 00} + get_hash_array_from_time() + %w{00 00 
+00 c0 a8 01 05 00 00 c0 a8 01 66 00 00} + get_hash_array_from_time() + %w{00 00 
 00 00 00 00 00 00 00 00 00 00 16 0a 00 00 00 00 00 00 00}
 
  # ok the c0 a8 stuff is the IP ADDRESS
