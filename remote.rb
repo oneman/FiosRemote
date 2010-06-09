@@ -16,9 +16,9 @@ end
 command = {}
 command['keepalive'] = %w{29}
 
-$houri = 9
-$minutei = 35
-$secondi = 20
+$houri = 0
+$minutei = 2
+$secondi = 10
 
 # example once valid one...
 $control_word = %w{7e 79 93 63 2f a9 0e 6d ca 61 74 82 bc cc 1a 7f fd de dd ed}
@@ -34,14 +34,10 @@ def newtime()
 #$minutei = 0
 #$houri = 0
  
-$secondi = $secondi + 1
 
-if $secondi == 61
  $minutei = $minutei + 1
- $secondi = 1
-end
 
-if $minutei == 61
+if $minutei == 60
  $houri = $houri + 1
  $minutei = 0
 end
