@@ -22,18 +22,32 @@ def dec2hex(number)
    end
    return ret_hex; ## Returning HEX
 end
+class NilClass
+def show
+ puts "NOT FOUND"
+end
+
+end
 
 class Vhash < ActiveRecord::Base
 set_table_name "vhashes"
 
 def show
- puts "input: #{self.input} ouput: #{self.output}"
+ puts "FOUND input: #{self.input} as decimal: #{self.input_to_decimal_timecode} ouput: #{self.output}"
 end
+
 
 def hash
  output
 end
 
+def input_to_decimal
+  self.input[0..1].hex.to_s + self.input[2..3].hex.to_s + self.input[4..5].hex.to_s +  self.input[6..7].hex.to_s
+end
+
+def input_to_decimal_timecode
+  self.input[0..1].hex.to_s + "-" + self.input[2..3].hex.to_s + ":" + self.input[4..5].hex.to_s + "." + self.input[6..7].hex.to_s
+end
 
 end
 
@@ -105,30 +119,29 @@ def find_by_time(time)
 
 end
 
-v1 = Vhash.find(:first)
-v1.show
-puts v1.hash
+#v1 = Vhash.find(:first)
+#v1.show
+#puts v1.hash
 
-v2 = find_by_time("2:35:36")
+#v2 = find_by_time("2:35:36")
 
-x = Time.parse("01/01/1970")
-86400.times do 
-x = x + 1.second
-vhash = find_by_time(x.strftime("%H:%M:%S"))
+#x = Time.parse("01/01/1970")
+#86400.times do 
+#x = x + 1.second
+#vhash = find_by_time(x.strftime("%H:%M:%S"))
 
-end
-v2.show
+#end
+#v2.show
 
-puts "--------"
+#puts "--------"
 
-v3 = Vhash.find_by_output("62 75 11 73 f6 5c b5 d2 71 62 ef b7 54 be 8c ef 09 e2 86 67".gsub(" ", ""))
-if v3 != nil
- v3.show
-end
+#v3 = Vhash.find_by_output("62 75 11 73 f6 5c b5 d2 71 62 ef b7 54 be 8c ef 09 e2 86 67".gsub(" ", ""))
+# v3.show
 
-v4 = Vhash.find_by_output("70 01 c2 04 fe 08 50 6b 80 21 37 18 84 a7 6f c2 7e ca 6d 9c".gsub(" ", ""))
-if v4 != nil
- v4.show
-end
+
+#v4 = Vhash.find_by_output("70 01 c2 04 fe 08 50 6b 80 21 37 18 84 a7 6f c2 7e ca 6d 9c".gsub(" ", ""))
+
+# v4.show
+
 
 

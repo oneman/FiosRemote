@@ -1,6 +1,39 @@
 require 'socket'
-require "vhash.rb"
 
+Thread.new do
+
+#abort "Usage: server_addr, server_port, cmd_str" unless ARGV.length == 3
+
+UDP_RECV_TIMEOUT = 3  # seconds
+
+def q2cmd(server_addr, server_port, cmd_str)
+  resp, sock = nil, nil
+  begin
+   cmd = "#{cmd_str}"
+    sock = UDPSocket.open
+    sock.send(cmd, 0, server_addr, server_port)
+    resp = if select([sock], nil, nil, UDP_RECV_TIMEOUT)
+      sock.recvfrom(65536)
+    end
+    if resp
+      resp[0] = resp[0][4..-1]  # trim leading 0xffffffff
+    end
+  rescue IOError, SystemCallError
+  ensure
+    sock.close if sock
+  end
+  resp ? resp[0] : nil
+end
+
+# your firewall has to allow communication with IP address 67.19.248.74 (port 27912)
+#server, port, cmd = *ARGV
+server = "192.168.1.102"
+port = 4538
+cmd = "V\x02\x02\x02\x00\x01\x00\x00\x12\x12,\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x82\x00\x00\x00\x00\x00\x00M\x12\x00\x01\x02\x04\x00\x01\x01\x05\x00\x01\x00\x06\x00\x04\x00\x00\x00\x13\x07\x00 \xa6ag\xde\x9f\x08\r\xbb2\x04^\xd6\xd3\x84\x02\x14\xe5\xa9R\xc6\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\x00\x06\x00\x00\x00\x00\x00\x00\t\x00\x02\x11\xb4\n\x00\x01\x01\x01\x00\x02SR"
+
+result = q2cmd(server, port, cmd)
+
+end
 
 def dec2hex(number)
    number = Integer(number.to_i);
@@ -28,9 +61,28 @@ $control_word = %w{7e 79 93 63 2f a9 0e 6d ca 61 74 82 bc cc 1a 7f fd de dd ed}
 def newtime()
  now = Time.now
 
-$hours = dec2hex(now.strftime("%H"))
-$minutes = dec2hex(now.strftime("%M"))
-$seconds = dec2hex(now.strftime("%S"))
+# $hours = dec2hex(now.strftime("%H"))
+# $minutes = dec2hex(now.strftime("%M"))
+# $seconds = dec2hex(now.strftime("%S"))
+
+#$secondi = 1
+#$minutei = 0
+#$houri = 0
+ 
+
+ $minutei = $minutei + 1
+
+if $minutei == 60
+ $houri = $houri + 1
+ $minutei = 0
+end
+
+$hours = dec2hex($houri.to_s)
+$minutes = dec2hex($minutei.to_s)
+$seconds = dec2hex($secondi.to_s)
+
+
+
 
  if $minutes.length < 2
   $minutes = "0" + $minutes.to_s
@@ -56,42 +108,13 @@ $seconds = dec2hex(now.strftime("%S"))
      $minutes = "00"
  end
 
+ # 17 2B 02     # 14 30 0a
+
+# $hours = "37"
+# $minutes = "47"
+# $seconds = "a6"
+
  puts "Updated Timecode: " + $hours.to_s + ":" + $minutes.to_s + ":" + $seconds.to_s
-end
-
-def get_hash_array_from_time()
- v = Vhash.find_by_input("00#{$hours}#{$minutes}#{$seconds}")
- v.show
- return [v.output[0..1], v.output[2..3], v.output[4..5], v.output[6..7], v.output[8..9], v.output[10..11], v.output[12..13], v.output[14..15], v.output[16..17], v.output[18..19], 
-         v.output[20..21], v.output[22..23], v.output[24..25], v.output[26..27], v.output[28..29], v.output[30..31], v.output[32..33], v.output[34..35], v.output[36..37], v.output[38..39] ]
-end
-
-def construct_fios_remote_packet_udp_init()
-
-#0000   56 02 02 02 00 01 00 00 01 26 36 00 00 00 00 00  V........&6.....
-#0010   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-#0020   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-#0030   00 00 00 00 00 00 00 00 00 00 00 00 00 00 82 00  ................
-#0040   00 00 00 00 00 4d 12 00 01 02 04 00 01 01 05 00  .....M..........
-#0050   01 00 06 00 04 00 00 00 13 07 00 20 44 c8 71 98  ........... D.q.
-#0060   36 e7 cb 48 a5 81 53 b3 80 23 2b 38 e1 45 ee a4  6..H..S..#+8.E..
-#0070   00 00 00 00 00 00 00 00 00 00 00 00 08 00 06 00  ................
-#0080   00 00 00 00 00 09 00 02 11 b4 0a 00 01 01 01 00  ................
-#0090   02 53 52                                         .SR
-
-newtime()
-udp_payload = %w{56 02 02 02 00 01 00 00} + [$hours, $minutes, $seconds] + %w{00 00 00 00 00 
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 82 00
-00 00 00 00 00 4d 12 00 01 02 04 00 01 01 05 00
-01 00 06 00 04 00 00 00 13 07 00 20} + get_hash_array_from_time() + %w{
-00 00 00 00 00 00 00 00 00 00 00 00 08 00 06 00
-00 00 00 00 00 09 00 02 11 b4 0a 00 01 01 01 00
-02 53 52}
-
-return udp_payload
-
 end
 
 def construct_fios_remote_packet_getcode(code)
@@ -122,7 +145,7 @@ newtime()
                                               #hh mm ss 
 
 
-init_payload = %w{56 02 02 01 00 03 00 00} + [$hours, $minutes, $seconds] + %w{00 00 00 00 00
+init_payload = %w{56 02 02 01 00 03 00} + [ARGV.shift, ARGV.shift, ARGV.shift, ARGV.shift] + %w{00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0a 00
@@ -144,7 +167,7 @@ def construct_fios_remote_packet_init2()
 #newtime()
 
 init2_control_word = %w{62 75 11 73 f6 5c b5 d2 71 62 ef b7 54 be 8c ef 09 e2 86 67}
-init2_control_word_test = %w{00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00}
+
                                               #nope                 # 00 or 01 before 0a?
 init_payload2 = %w{56 02 02 01 00 04 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -158,17 +181,6 @@ init_payload2 = %w{56 02 02 01 00 04 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 10 00 04 00 00 00 00 11 00 04 00 00
 00 00}
 
-init_payload2_test = %w{56 02 02 01 00 04 00 00 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 01 0a 00            
-00 00 00 00 00 6c 12 00 01 02 01 00 02 53 52 04
-00 01 01 05 00 01 00 06 00 04 00 00 00 13 07 00
-20} + init2_control_word_test + %w{00 00 00 00 00 00 00 00 00 00 00
-00 0b 00 04 00 00 00 00 0c 00 02 00 00 0d 00 04
-00 00 00 00 0e 00 04 00 00 00 00 0f 00 06 00 00
-00 00 00 00 10 00 04 00 00 00 00 11 00 04 00 00
-00 00}
 
 #0000   56 02 02 01 00 04 00 00 00 00 00 00 00 00 00 00  V...............
 #0010   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
@@ -183,7 +195,7 @@ init_payload2_test = %w{56 02 02 01 00 04 00 00 00 00 00 00 00 00 00 00
 #00a0   00 00 00 00 10 00 04 00 00 00 00 11 00 04 00 00  ................
 #00b0   00 00    
 
-return init_payload2_test
+return init_payload2
 
 end
 
@@ -208,10 +220,10 @@ def construct_fios_remote_packet_chandown()
 #newtime()
 
 channel_down_payload = %w{56 02 02 01 00 1d 00 00} + [$hours, $minutes, $seconds] + %w{00 00 00 00 00 
-00 c0 a8 01 02 00 00 c0 a8 01 66 00 00} + get_hash_array_from_time() + %w{00 00 
+00 c0 a8 01 07 00 00 c0 a8 01 66 00 00} + $control_word + %w{00 00 
 00 00 00 00 00 00 00 00 00 00 16 0a 00 00 00 00 00 00 00}
 
- # ok the c0 a8 stuff is the IP ADDRESS
+
 
 #cd 07 5c  ..........f....\
 #0020   4e 04 a6 89 3a db 98 41 b9 e1 45 47 26 f5 35 0d  N...:..A..EG&.5.
@@ -236,7 +248,7 @@ set_control_payload = %w{56 02 02 01 00 1c 00 00} + [$hours, $minutes, $seconds]
 
 
 #0000   56 02 02 01 00 1c 00 00 11 38 1c 00 00 00 00 00  V........8......
-                   #xx the byte below this xx is 07 on some other packets...  # aha i was on to the ip address change!
+                   #xx the byte below this xx is 07 on some other packets... 
 #0010   00 c0 a8 01 02 00 00 c0 a8 01 66 00 00 58 b9 14  ..........f..X..
 #0020   75 89 61 8e ab a5 37 b5 bb 88 b4 41 8f 68 6d 88  u.a...7....A.hm.
 #0030   f7 00 00 00 00 00 00 00 00 00 00 00 00 00 0a 00  ................
@@ -245,16 +257,6 @@ set_control_payload = %w{56 02 02 01 00 1c 00 00} + [$hours, $minutes, $seconds]
 #0060   a5 37 b5 bb 88 b4 41 8f 68 6d 88 f7 00 00 00 00  .7....A.hm......
 #0070   00 00 00 00 00 00 00 00                          ........
 
-# another example
-
-#0000   56 02 02 01 00 1c 00 00 01 12 39 00 00 00 00 00  V.........9.....
-#0010   00 c0 a8 01 02 00 00 c0 a8 01 66 00 00 76 72 d3  ..........f..vr.
-#0020   d3 0b b7 28 da 2e fe 3b e6 2f af 7b 2f a0 d2 c0  ...(...;./.{/...
-#0030   bd 00 00 00 00 00 00 00 00 00 00 00 00 00 0a 00  ................
-#0040   00 00 00 00 00 32 04 00 01 01 05 00 01 00 06 00  .....2..........
-#0050   04 00 00 00 13 07 00 20 76 72 d3 d3 0b b7 28 da  ....... vr....(.
-#0060   2e fe 3b e6 2f af 7b 2f a0 d2 c0 bd 00 00 00 00  ..;./.{/........
-#0070   00 00 00 00 00 00 00 00                          ........
 
 return set_control_payload
 end
@@ -624,38 +626,7 @@ return png_payload
 
 end
 
-Thread.new do
 
-#abort "Usage: server_addr, server_port, cmd_str" unless ARGV.length == 3
-
-UDP_RECV_TIMEOUT = 3  # seconds
-
-def send_udp_init_packet(server_addr, server_port)
-  resp, sock = nil, nil
-  begin
-   
-    sock = UDPSocket.open
-    puts "sending udp init packet"
-    puts [construct_fios_remote_packet_udp_init().join '']
-    sock.send([construct_fios_remote_packet_udp_init().join ''].pack('H*'), 0, server_addr, server_port)
-    resp = if select([sock], nil, nil, UDP_RECV_TIMEOUT)
-      sock.recvfrom(65536)
-    end
-    if resp
-      resp[0] = resp[0][4..-1]  # trim leading 0xffffffff
-    end
-  rescue IOError, SystemCallError
-  ensure
-    sock.close if sock
-  end
-  resp ? resp[0] : nil
-end
-
-server = "192.168.1.102"
-port = 4538
-result = send_udp_init_packet(server, port)
-
-end
 
 serv = TCPServer.new(4532)
 begin
@@ -665,7 +636,6 @@ sock = serv.accept_nonblock
  retry
 end
 
-#=begin
 puts "Sending Init Packet"
 sock.write [construct_fios_remote_packet_init().join ''].pack('H*')
  
@@ -690,10 +660,15 @@ for x in $control_word
 end
 
 puts "Control Code: " + $control_word.to_s
+#system "psql fiosv -c \"INSERT INTO vhashes(input,output) VALUES('00#{$hours}#{$minutes}#{$seconds}', '#{$control_word}')\""
+#puts "ruby stb.rb \"#{$control_word.join(" ")}\""
+puts "searching local database for it... "
+system "ruby search_vhashdb.rb #{$control_word}"
 
+Kernel.exit
 end
 
-#=end
+
 
 
 #puts "sending init2 packet"
@@ -738,13 +713,36 @@ puts "Entering loop state"
 while true
  puts "Looped"
 
- puts "sending keepalive packet"
- sock.write [construct_fios_remote_packet_keepalive().join ''].pack('H*')
- puts "Expecting / printing response"
- data = sock.recvfrom( 2220 )[0].chomp
- if data
-  puts data.unpack("H*")
+code_i_want = %w{00 14 30 0a}
+
+#puts "Sending getcode Packet"
+#sock.write [construct_fios_remote_packet_getcode(code_i_want).join ''].pack('H*')
+ 
+puts "Sending Init Packet"
+sock.write [construct_fios_remote_packet_init().join ''].pack('H*')
+
+puts "Expecting / printing response"
+data = sock.recvfrom( 2220 )[0].chomp
+if data
+   puts data.unpack("H*")
+end
+
+puts "Expecting / printing packet with control code"
+
+data = sock.recvfrom( 2220 )[0].chomp
+if data
+puts data.unpack("H*")
+ $control_word = [data[33].to_s(16), data[34].to_s(16), data[35].to_s(16), data[36].to_s(16), data[37].to_s(16), data[38].to_s(16), data[39].to_s(16), data[40].to_s(16), data[41].to_s(16), data[42].to_s(16), 
+                       data[43].to_s(16), data[44].to_s(16), data[45].to_s(16), data[46].to_s(16), data[47].to_s(16), data[48].to_s(16), data[49].to_s(16), data[50].to_s(16), data[51].to_s(16), data[52].to_s(16) ]
+for x in $control_word
+ if x.length < 2
+   $control_word[$control_word.index(x)] = "0" + x.to_s
+
  end
+end
+
+puts "Timecode: 00 #{$hours} #{$minutes} #{$seconds} Control Code: " + $control_word.to_s
+system "psql fiosv -c \"INSERT INTO vhashes(input,output) VALUES('00#{$hours}#{$minutes}#{$seconds}', '#{$control_word}')\""
 
 # sleep 3
 # puts "sending experimental packet"
@@ -756,16 +754,16 @@ while true
 # end
 
 
- sleep 5
+ sleep 0.65
  
+end
 
- puts "sending channel down command"
- puts construct_fios_remote_packet_chandown().join ''
- sock.write [construct_fios_remote_packet_chandown().join ''].pack('H*')
- puts "Expecting / printing response"
- data = sock.recvfrom( 2220 )[0].chomp
- if data
-  puts data.unpack("H*")
- end
+# puts "sending channel down command"
+# sock.write [construct_fios_remote_packet_chandown().join ''].pack('H*')
+# puts "Expecting / printing response"
+# data = sock.recvfrom( 2220 )[0].chomp
+# if data
+#  puts data.unpack("H*")
+# end
 
 end
