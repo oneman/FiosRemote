@@ -814,11 +814,11 @@ commands = {
 
 puts "\n\n** Initing FiOS TV Remote Web Server **\n\nThis is BIG!\n\n"
 
-
+$commands = commands
 
 def handle_command(cmd)
-
-if isNumeric(cmd) && false
+commands = $commands
+if isNumeric(cmd)
 
 cmd.split(//).each { |num|
   sock.write [construct_fios_remote_packet_custom_command(commands.index(num).to_s).join ''].pack('H*')
@@ -850,6 +850,8 @@ else
 end
 
  command = nil
+
+end
 end
  
 
@@ -909,7 +911,7 @@ remote = '
 <area shape="rect" coords="271,678,299,702" href="/?cmd=d" />
 </map>
 <form action="/" method="get">
-<input type="text" size="12">
+<input name="cmd" type="text" size="12">
 <input type="submit" value="send custom command">
 </form>
 
@@ -924,7 +926,7 @@ while (session = server.accept)
   request = session.gets
   puts request
   if request.include?("?cmd=")
-   cmd = request.split("?cmd=").last
+   cmd = request.split("?cmd=").last.split(" ").first
    handle_command(cmd)
   end
   session.print "HTTP/1.1 200/OK\rContent-type: text/html\r\n\r\n"
