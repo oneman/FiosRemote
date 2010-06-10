@@ -1,0 +1,15 @@
+<img src="Untitled" width="640" height="400" border="0" usemap="#map" />
+
+<map name="map">
+<!-- #$-:Image map file created by GIMP Image Map plug-in -->
+<!-- #$-:GIMP Image Map plug-in by Maurits Rijk -->
+<!-- #$-:Please do not edit lines starting with "#$" -->
+<!-- #$VERSION:2.3 -->
+<!-- #$AUTHOR:oneman -->
+<area shape="rect" coords="85,48,127,92" href="/?cmd=volup" />
+<area shape="rect" coords="139,50,179,92" href="/?cmd=mute" />
+<area shape="rect" coords="190,49,234,90" href="/?cmd=favorites" />
+<area shape="rect" coords="247,53,284,90" href="/?cmd=chanup" />
+<area shape="rect" coords="248,106,282,143" href="/?cmd=chandown" />
+<area shape="rect" coords="90,105,126,145" href="/?cmd=voldown" />
+</map>
