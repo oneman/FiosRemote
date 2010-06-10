@@ -792,7 +792,7 @@ commands = {
 "1f" => "fast forward",
 "1d" => "stop",
 "1b" => "dvr",
-"10" => "widgets",
+#"10" => "widgets",
 "2e" => "A",
 "2f" => "B",
 "30" => "C",
@@ -817,8 +817,9 @@ cmd = STDIN.gets.chomp
 
 if isNumeric(cmd)
 
-cmd.each { |num|
+cmd.split(//).each { |num|
   sock.write [construct_fios_remote_packet_custom_command(commands.index(num).to_s).join ''].pack('H*')
+  sleep 0.1
 }
   sock.write [construct_fios_remote_packet_custom_command(commands.index("enter").to_s).join ''].pack('H*')
 else
