@@ -59,9 +59,11 @@ $seconds = dec2hex(now.strftime("%S"))
  puts "Updated Timecode: " + $hours.to_s + ":" + $minutes.to_s + ":" + $seconds.to_s
 end
 
-def get_hash_array_from_time()
+def get_hash_array_from_time(hide=false)
  v = Vhash.find_by_input("00#{$hours}#{$minutes}#{$seconds}")
- v.show
+ unless hide
+  v.show
+ end
  return [v.output[0..1], v.output[2..3], v.output[4..5], v.output[6..7], v.output[8..9], v.output[10..11], v.output[12..13], v.output[14..15], v.output[16..17], v.output[18..19], 
          v.output[20..21], v.output[22..23], v.output[24..25], v.output[26..27], v.output[28..29], v.output[30..31], v.output[32..33], v.output[34..35], v.output[36..37], v.output[38..39] ]
 end
@@ -232,9 +234,9 @@ end
 def construct_fios_remote_packet_custom_command(command)
 
 #newtime()
-
+hide = true
 custom_command_payload = %w{56 02 02 01 00 1d 00 00} + [$hours, $minutes, $seconds] + %w{00 00 00 00 00 
-00 c0 a8 01 05 00 00 c0 a8 01 66 00 00} + get_hash_array_from_time() + %w{00 00 
+00 c0 a8 01 05 00 00 c0 a8 01 66 00 00} + get_hash_array_from_time(hide) + %w{00 00 
 00 00 00 00 00 00 00 00 00 00} + [command] + %w{0a 00 00 00 00 00 00 00}
                         
 
