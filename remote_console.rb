@@ -767,7 +767,7 @@ end
 commands = {
 "17" => "volup",
 "18" => "voldown",
-"10" => "mute",
+"01" => "mute",
 "14" => "fiostv",
 "12" => "favirotes",
 "15" => "chanup",
@@ -776,7 +776,8 @@ commands = {
 "b0" => "left",
 "c0" => "right",
 "a0" => "down",
-"d0" => "enter",
+"0d" => "ok",
+"02" => "enter",
 "70" => "guide",
 "60" => "menu",
 "80" => "info",
@@ -792,7 +793,7 @@ commands = {
 "1f" => "fast forward",
 "1d" => "stop",
 "1b" => "dvr",
-#"10" => "widgets",
+"10" => "widgets",
 "2e" => "A",
 "2f" => "B",
 "30" => "C",
@@ -821,7 +822,10 @@ cmd.split(//).each { |num|
   sock.write [construct_fios_remote_packet_custom_command(commands.index(num).to_s).join ''].pack('H*')
   sleep 0.1
 }
+  sock.write [construct_fios_remote_packet_custom_command(commands.index("ok").to_s).join ''].pack('H*')
+  sleep 0.1
   sock.write [construct_fios_remote_packet_custom_command(commands.index("enter").to_s).join ''].pack('H*')
+
 else
 
 # handle command
