@@ -819,7 +819,7 @@ $sock = sock
 def handle_command(cmd)
 commands = $commands
 sock = $sock
-if isNumeric(cmd)
+if isNumeric(cmd) && cmd.length > 1
 
 cmd.split(//).each { |num|
   sock.write [construct_fios_remote_packet_custom_command(commands.index(num).to_s).join ''].pack('H*')
@@ -921,9 +921,12 @@ remote = '
 
 
 
-
+skip = false
 server = TCPServer.new('', 5202)
-while (session = server.accept)
+while true
+  session, monkey = server.accept
+  if skip == false
+  skip = true
   request = session.gets
   puts request
   if request.include?("?cmd=")
@@ -937,6 +940,9 @@ while (session = server.accept)
   session.print page
   session.print "</div></body></html>"
   session.close
+ else
+  skip = false
+ end
 end
 
 
