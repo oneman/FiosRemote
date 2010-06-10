@@ -742,7 +742,7 @@ for x in $control_word
 end
 
 puts "Timecode: 00 #{$hours} #{$minutes} #{$seconds} Control Code: " + $control_word.to_s
-system "psql fiosv -c \"INSERT INTO vhashes(input,output) VALUES('00#{$hours}#{$minutes}#{$seconds}', '#{$control_word}')\""
+#system "psql fiosv -c \"INSERT INTO vhashes(input,output) VALUES('00#{$hours}#{$minutes}#{$seconds}', '#{$control_word}')\""
 
 # sleep 3
 # puts "sending experimental packet"

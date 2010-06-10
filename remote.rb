@@ -665,10 +665,10 @@ sock = serv.accept_nonblock
  retry
 end
 
-#=begin
+
 puts "Sending Init Packet"
 sock.write [construct_fios_remote_packet_init().join ''].pack('H*')
- 
+
 puts "Expecting / printing response"
 data = sock.recvfrom( 2220 )[0].chomp
 if data
@@ -739,6 +739,7 @@ while true
  puts "Looped"
 
  puts "sending keepalive packet"
+ puts construct_fios_remote_packet_keepalive().join ''
  sock.write [construct_fios_remote_packet_keepalive().join ''].pack('H*')
  puts "Expecting / printing response"
  data = sock.recvfrom( 2220 )[0].chomp
@@ -762,10 +763,6 @@ while true
  puts "sending channel down command"
  puts construct_fios_remote_packet_chandown().join ''
  sock.write [construct_fios_remote_packet_chandown().join ''].pack('H*')
- puts "Expecting / printing response"
- data = sock.recvfrom( 2220 )[0].chomp
- if data
-  puts data.unpack("H*")
- end
+
 
 end

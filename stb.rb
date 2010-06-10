@@ -2,9 +2,12 @@
 
 require 'socket'      # Sockets are in standard library
 
-$control_code = ARGV.shift
+require "vhash.rb"
+
+$control_code = "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+#$control_code = ARGV.shift
 $control_code = $control_code.split(" ")
-puts "control code is " + $control_code.join(" ")
+puts "default control code is " + $control_code.join(" ")
 
 def construct_fios_stb_packet_stb_first()
 
@@ -41,7 +44,7 @@ def construct_fios_stb_packet_stb_second()
 #0070   00 00   
 
                                                  # changed
-second_packet = %w{12 00 01 02 01 00 05 53 54 42 31 00 04 00 01 01
+second_packet = %w{12 00 01 02 01 00 05 53 54 42 32 00 04 00 01 01
 05 00 04 39 37 13 4d 06 00 04 00 00 00 14 07 00
 20} + $control_code + %w{00 00 00 00 00 00 00 00 00 00 00
 00 0b 00 04 01 0c 00 02 c0 00 0d 00 04 c0 00 00
@@ -82,6 +85,19 @@ sock = TCPSocket.open(hostname, port)
  data = sock.recvfrom( 2220 )[0].chomp
  if data
   puts data.unpack("H*")
+
+  time_code_to_encode = [data[7].to_s(16), data[8].to_s(16), data[9].to_s(16),data[10].to_s(16)]
+  for x in time_code_to_encode
+   if x.length < 2
+    time_code_to_encode[time_code_to_encode.index(x)] = "0" + x.to_s
+   end
+  end
+  time_code_to_encode = time_code_to_encode[0] + time_code_to_encode[1] + time_code_to_encode[2] + time_code_to_encode[3]
+  time_code_to_encode = time_code_to_encode.upcase
+  puts "time code to encode is: #{time_code_to_encode}"
+  v = Vhash.find_by_input(time_code_to_encode)
+  v.show
+  $control_code = v.hash_as_array
  end
 
  puts "sending stb first packet"
