@@ -144,7 +144,7 @@ def construct_fios_remote_packet_init2()
 #newtime()
 
 init2_control_word = %w{62 75 11 73 f6 5c b5 d2 71 62 ef b7 54 be 8c ef 09 e2 86 67}
-init2_control_word_test = %w{00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00}
+init2_control_word_test = %w{98 a9 e9 e3 da a5 92 7c 85 97 21 f6 c7 64 bf 1d 74 81 38 1b}
                                               #nope                 # 00 or 01 before 0a?
 init_payload2 = %w{56 02 02 01 00 04 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
@@ -164,7 +164,7 @@ init_payload2_test = %w{56 02 02 01 00 04 00 00 00 00 00 00 00 00 00 00
 00 00 00 00 00 00 00 00 00 00 00 00 00 01 0a 00            
 00 00 00 00 00 6c 12 00 01 02 01 00 02 53 52 04
 00 01 01 05 00 01 00 06 00 04 00 00 00 13 07 00
-20} + init2_control_word_test + %w{00 00 00 00 00 00 00 00 00 00 00
+20} + $control_word + %w{00 00 00 00 00 00 00 00 00 00 00
 00 0b 00 04 00 00 00 00 0c 00 02 00 00 0d 00 04
 00 00 00 00 0e 00 04 00 00 00 00 0f 00 06 00 00
 00 00 00 00 10 00 04 00 00 00 00 11 00 04 00 00
@@ -680,6 +680,11 @@ puts "Expecting / printing packet with control code"
 data = sock.recvfrom( 2220 )[0].chomp
 if data
 puts data.unpack("H*")
+
+ $code_i_need_hash_for = [data[19].to_s(16), data[20].to_s(16), data[21].to_s(16), dec2hex(data[22].to_s(16).hex + 1)]
+ if $code_i_need_hash_for[3].length < 2
+     $code_i_need_hash_for[3] = "0" + $code_i_need_hash_for[3]
+ end
  $control_word = [data[33].to_s(16), data[34].to_s(16), data[35].to_s(16), data[36].to_s(16), data[37].to_s(16), data[38].to_s(16), data[39].to_s(16), data[40].to_s(16), data[41].to_s(16), data[42].to_s(16), 
                        data[43].to_s(16), data[44].to_s(16), data[45].to_s(16), data[46].to_s(16), data[47].to_s(16), data[48].to_s(16), data[49].to_s(16), data[50].to_s(16), data[51].to_s(16), data[52].to_s(16) ]
 for x in $control_word
@@ -693,13 +698,41 @@ puts "Control Code: " + $control_word.to_s
 
 end
 
-#=end
 
 
-#puts "sending init2 packet"
-#sock.write [construct_fios_remote_packet_init2().join ''].pack('H*')
-#sock.flush
-#sleep 1
+puts "Sending get code Packet"
+sock.write [construct_fios_remote_packet_getcode($code_i_need_hash_for).join ''].pack('H*')
+
+puts "Expecting / printing useless ? response"
+data = sock.recvfrom( 2220 )[0].chomp
+if data
+   puts data.unpack("H*")
+end
+
+
+puts "Expecting / printing packet with code i wanted"
+
+data = sock.recvfrom( 2220 )[0].chomp
+if data
+puts data.unpack("H*")
+ $control_word = [data[33].to_s(16), data[34].to_s(16), data[35].to_s(16), data[36].to_s(16), data[37].to_s(16), data[38].to_s(16), data[39].to_s(16), data[40].to_s(16), data[41].to_s(16), data[42].to_s(16), 
+                       data[43].to_s(16), data[44].to_s(16), data[45].to_s(16), data[46].to_s(16), data[47].to_s(16), data[48].to_s(16), data[49].to_s(16), data[50].to_s(16), data[51].to_s(16), data[52].to_s(16) ]
+for x in $control_word
+ if x.length < 2
+   $control_word[$control_word.index(x)] = "0" + x.to_s
+
+ end
+end
+
+puts "Control Code: " + $control_word.to_s
+
+end
+
+
+puts "sending init2 packet"
+sock.write [construct_fios_remote_packet_init2().join ''].pack('H*')
+sock.flush
+sleep 1
 # puts "Expecting / printing response"
 # data = sock.recvfrom( 2220 )[0].chomp
 # if data
@@ -707,21 +740,15 @@ end
 # end
 
 
-#puts "sending png image"
-#sock.write [construct_fios_remote_packet_PNG().join ''].pack('H*')
+puts "sending png image"
+sock.write [construct_fios_remote_packet_PNG().join ''].pack('H*')
 
-#sock.flush
+
+
+
 # puts "Expecting / printing response"
 # data = sock.recvfrom( 2220 )[0].chomp
-# if data
-#  puts data.unpack("H*")
-# end
-
-# puts "sending keepalive packet"
-# sock.write [construct_fios_remote_packet_keepalive().join ''].pack('H*')
-# puts "Expecting / printing response"
-# data = sock.recvfrom( 2220 )[0].chomp
-# if data
+ #if data
 #  puts data.unpack("H*")
 # end
 
@@ -763,6 +790,10 @@ while true
  puts "sending channel down command"
  puts construct_fios_remote_packet_chandown().join ''
  sock.write [construct_fios_remote_packet_chandown().join ''].pack('H*')
-
+ puts "Expecting / printing response"
+ data = sock.recvfrom( 2220 )[0].chomp
+ if data
+  puts data.unpack("H*")
+ end
 
 end

@@ -664,7 +664,7 @@ puts "Control Code: " + $control_word.to_s
 #puts "ruby stb.rb \"#{$control_word.join(" ")}\""
 puts "searching local database for it... "
 system "ruby search_vhashdb.rb #{$control_word}"
-
+sock.close
 Kernel.exit
 end
 

@@ -44,7 +44,7 @@ def construct_fios_stb_packet_stb_second()
 #0070   00 00   
 
                                                  # changed
-second_packet = %w{12 00 01 02 01 00 05 53 54 42 32 00 04 00 01 01
+second_packet = %w{12 00 01 02 01 00 05 53 54 42 30 00 04 00 01 01
 05 00 04 39 37 13 4d 06 00 04 00 00 00 14 07 00
 20} + $control_code + %w{00 00 00 00 00 00 00 00 00 00 00
 00 0b 00 04 01 0c 00 02 c0 00 0d 00 04 c0 00 00
@@ -159,6 +159,15 @@ while true
 
  sleep 2
 
+
+
+# puts "sending encode for me packet"
+# sock.write [construct_fios_stb_packet_encodeforme().join ''].pack('H*')
+# puts "Expecting / printing the code we want"
+# data = sock.recvfrom( 2220 )[0].chomp
+# if data
+#  puts data.unpack("H*")
+# end
 end
 
 
