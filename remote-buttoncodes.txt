@@ -1,0 +1,46 @@
+17 volup
+18 voldown
+10 mute
+14 fiostv
+12 favirotes
+15 chanup
+16 chandown
+90 up
+b0 left
+c0 right
+a0 down
+d0 enter/ok
+70 guide
+60 menu
+80 info
+13 last
+f0 options
+e0 exit
+
+21 record
+1a next
+19 prev
+1e pause
+20 rewind
+1c play
+1f fast forward
+1d stop
+1b dvr ?
+10 widgets
+2e A
+2f B
+30 C
+31 D
+
+80 backspace
+22 1
+23 2 and hash #
+24 3
+25 4
+26 5
+27 6
+28 7
+29 8
+2a 9 and *
+2b 0
+
