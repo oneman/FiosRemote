@@ -815,9 +815,10 @@ commands = {
 puts "\n\n** Initing FiOS TV Remote Web Server **\n\nThis is BIG!\n\n"
 
 $commands = commands
-
+$sock = sock
 def handle_command(cmd)
 commands = $commands
+sock = $sock
 if isNumeric(cmd)
 
 cmd.split(//).each { |num|
@@ -921,7 +922,7 @@ remote = '
 
 
 
-server = TCPServer.new('127.0.0.1', 5202)
+server = TCPServer.new('', 5202)
 while (session = server.accept)
   request = session.gets
   puts request
