@@ -29,6 +29,8 @@ end
 
 end
 
+
+
 class Vhash < ActiveRecord::Base
 set_table_name "vhashes"
 
@@ -128,6 +130,10 @@ def find_by_time(time)
    Kernel.exit
  end
 
+end
+
+class Vhash2 < Vhash
+set_table_name "vhashes2"
 end
 
 #v1 = Vhash.find(:first)
