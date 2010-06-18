@@ -651,7 +651,7 @@ def send_udp_init_packet(server_addr, server_port)
   resp ? resp[0] : nil
 end
 
-server = "192.168.1.102"
+server = "192.168.1.100"
 port = 4538
 result = send_udp_init_packet(server, port)
 
