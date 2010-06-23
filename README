@@ -138,3 +138,6 @@ it works, type help for commands.
 
 Q) What does this have to do with MythTV? 
 A) Nothing yet, these programs are completely independent from anything else at this time, however once the protocol and initial connection process is better understood, a standard library, and standard toolkit can be built that MythTV and any other program could then use to control the STB's
+
+Q) WTF are FiOS TV Widgets and how do they relate to this?
+A) FiOS TV Widgets are like apps for your STB, they use the same clunky interface as the menu system, they do things like show you twitter messages, weather, or help you shop on HSN. They are probably written in the LUA language. Verizon is seemingly going to open up widget development with a SDK, but they have not done so yet. The normal set up sequence of the FiOS mobile remote involves activating a mobile remote widget.
