@@ -4,11 +4,13 @@ require 'active_record'
 ActiveRecord::Base.establish_connection(
   :adapter => 'postgresql',
   :database => 'fiosv',
-  :username => 'oneman',
-  :password => 'funworld',
+  :username => 'YOURUSERNAMEHERE',
+  :password => 'PASSWORD',
   :host => 'localhost',
   :port => '5432'
 )
+
+# change the above adapter to mysql from postgresql if your using mysql
 
 #ActiveRecord::Base.logger = Logger.new(STDERR)
 
