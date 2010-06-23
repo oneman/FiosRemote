@@ -120,9 +120,8 @@ STB you are trying to control. Make sure you don't have any silly
 firewalls in your way.
 
 All the programs are coded in ruby, to run them ' ruby program.rb' You
-may need to install some packages. You need to have a postgres DB running
-and put in the DB from the .sql files. You maybe able to use mysql if you
-switch postgresql to mysql in the vhash.rb file.
+may need to install some packages. You need to have a DB running
+and put in the DB from the .sql files. SEE database_readme.txt FOR DETAILS
 
 remote_staysconnected.rb should be the first one you try. It may not
 connect, if it doesn't try it again like up to 10 or so times until it
