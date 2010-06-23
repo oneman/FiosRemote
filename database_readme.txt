@@ -1,8 +1,16 @@
-change adapter in vhash.rb to mysql maybe
+This program requires a database at this moment, postgres or mysql.
+
+The default is postgres, the database of winners. 
+
+If you are going to use mysql change adapter in vhash.rb ( LINE 5 or so) to mysql
+
+Update the user/host/password as needed.
 
 this is the only important table at this time
 
-data in fiostv_data.sql
+database data in: fiostv_otherway2.sql
+
+Run that after creating the database/tables. Should work in mysql/postgres
 
 ----------
 POSTGRES::::
