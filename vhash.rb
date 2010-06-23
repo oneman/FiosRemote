@@ -10,7 +10,11 @@ ActiveRecord::Base.establish_connection(
   :port => '5432'
 )
 
+# NOTE READ THIS 
 # change the above adapter to mysql from postgresql if your using mysql
+# dont forget to change the port too!! change user/ pass/db name to whatever you use
+# see README and database_readme.txt for details
+
 
 #ActiveRecord::Base.logger = Logger.new(STDERR)
 
