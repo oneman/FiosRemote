@@ -1,7 +1,7 @@
 FiOS TV HD STB Network Control Project - This is BIG!
 -----------------------------------------------------
 
-# Background - Yadda Yadda skip this section
+# # # - - - ::: Background - Yadda Yadda skip this section
 
 Verizon is a interesting name, it has no official meaning, but it makes
 me think of vertical horizon, maybe if somehow you could cut into the air
@@ -67,7 +67,7 @@ induced frenzy staring at hex codes from sniffed packets, trying to find
 correlation's and patterns in order to crack it. Well something along
 those lines happened.
 
-# Current Situation
+# # # - - - ::: Current Situation
 
 The protocol from the FiOS Mobile Remote Application has been reverse
 engineered, and I am able to control my TV from my computer via IP
@@ -87,7 +87,8 @@ implementations of the same thing. The idea is here is just to get
 something up and working reliably and then someone can write a standard
 library in whatever language they choose.
 
-# Questions
+
+# # # - - - ::: Questions we want to answer from this testing
 
 1) What is possible before installing the FiOS mobile remote widget? Is
 this a service on the box that is always on? 2) Is there some kind of pin
@@ -96,7 +97,7 @@ running on the STB written in LUA using the SDK that Verizon will maybe
 possibly be releasing for FiOS STBs? 4) Are the security codes the same
 for each box?
 
-# Future issues
+# # # - - - ::: Future issues
 
 Verizon could change the protocol or patch all the security issues at any
 time. I think this is unlikely because of the nature of the strange
@@ -110,7 +111,8 @@ or home computer or laptop be able to control the TV is the future, and
 you know it, keeping the protocol proprietary is just old thinking, more
 money and fun is in the open.
 
-# Technical
+
+# # # - - - ::: Technical
 
 In each file, there is a hard coded IP address, you need to open the file
 in a text editor and search for 192 and replace the IP with the IP of the
@@ -130,4 +132,9 @@ every 5 seconds.
 remote_console_exp.rb gives you a console like interface to your STB. If
 it works, type help for commands.
 
-More to come..
+
+# # # - - - ::: FAQ 
+
+
+Q) What does this have to do with MythTV? 
+A) Nothing yet, these programs are completely independent from anything else at this time, however once the protocol and initial connection process is better understood, a standard library, and standard toolkit can be built that MythTV and any other program could then use to control the STB's
