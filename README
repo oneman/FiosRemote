@@ -1,0 +1,133 @@
+FiOS TV HD STB Network Control Project - This is BIG!
+-----------------------------------------------------
+
+# Background - Yadda Yadda skip this section
+
+Verizon is a interesting name, it has no official meaning, but it makes
+me think of vertical horizon, maybe if somehow you could cut into the air
+you could see all of the data traveling through it. I suppose they came
+out of some mergers and such, I'm not a historian, but I do remember when
+I was a kid we had bell atlantic and that disappeared into the ether.
+Verizon wireless is another matter, around 2005 it was beginning to
+become mandatory everyone have a cellphone, or you were simply a recluse.
+I held out until 2007 personally. I hated the cellphones at the time, and
+verizon had some stinkers, the main problem was the software.. Verizon
+'get it now' enabled you to pay two dollars for a ringtone or even more
+for a shitty snake game, what a nightmare. I hated that crap, I got the
+lowest phone possible in 2007 and waited for linux to take over the world
+as it most certainly will. Well it looks like Verizon used all those
+ringtone buying fools money wisely, and upgraded there network
+constantly. Then I guess sometime in 2009 they decided, enough horse
+shit, lets take this to the next level, finally in November the Droid was
+released. The perfect child of open source hackers and cut throat
+corporate suits. Meanwhile back in the day on land, DSL came into
+existence and sucked immensely to no ones surprise, better than that 33.6
+modem tho. Then FiOS comes along, fuck yeah, thats the way to do it. But
+damn its only available in the rich part of some area I don't live. (This
+is still an issue.) Fast forward to early 2010 and Verizon releases a
+mobile app that lets you control the television using you phone. Yes. Can
+you hear me now? The droid isn't so much a phone as it is a mobile
+computer with phone capabilities, and of course it should control the TV,
+and let you in the door and start the car and the whole nine yards. Three
+screens and a cloud.. who said that? Wait that other screen, the
+computer, it should be able to control the tv too, and via a IP network,
+not some rig up with an IR Blaster, are you kidding me? Maybe the
+computer could change the channel on a schedule. Perhaps it could change
+the channel on every TV in the house at the same time. Maybe it could use
+information from a social network to determine when commercials were on
+and mute the TV. Maybe during commercials you could switch channels but
+then the computer switches back to moment the show returns. Maybe you
+could subscribe to someone else's viewing habits so your channel is
+synced to there channel. Maybe your just a worn out person falling down
+on the couch after a long day of talking on your verizon wireless phone
+and checking facebook, you don't know what you want to watch but you want
+to be entertained, so the computer cycles through your favorite channels
+until you tell it to stop. Whatever the use-case is, obviously your
+mobile computer and computer should be able to control the TV, and
+control it over an IP network.
+
+The Verizon FiOS mobile remote is pretty neat, it lets you do all the
+normal functions of the remote, it lets you send photos from your mobile
+to the tv screen instantly (with a 4 second lag of course), and it lets
+you set favorites by creating a custom icon based menu with the logos of
+your favorite channels. Did I mention that I thought the idea of 'channel
+numbers' seems pretty out dated with 2000 channels? Shouldn't we browse
+by tag or category or anything but numbers? The software is a lil bit
+clunky in some senses tho, it doesn't work in landscape mode, its
+interface on android is a bit nonstandard.. and it uses some kind of
+bizarre network protocol that looks like something a news station control
+center would have used in the early nineties.
+
+The network protocol used by the FiOS mobile remote to control the STB's
+(HD only, for some reason.) is binary and not plaintext or xml or
+anything sensible. Its connection process is somewhat backwards and it
+has several security mechanisms, however it is not encrypted. One would
+have to stay up all night long for many nights in some kind of drug
+induced frenzy staring at hex codes from sniffed packets, trying to find
+correlation's and patterns in order to crack it. Well something along
+those lines happened.
+
+# Current Situation
+
+The protocol from the FiOS Mobile Remote Application has been reverse
+engineered, and I am able to control my TV from my computer via IP
+network without any requirement of the FiOS mobile remote application.
+However the set of security codes maybe unique to each box, thats really
+not a problem as the way to crack it is the same, its just a matter of
+determining what its necessary to get a fresh STB talking to the
+computer.
+
+I am a Ruby and C developer, and I used arpspoof, wireshark, my brain to
+reverse the protocol. I wrote ruby programs that connect to the STB
+pretending to be mobile remote and programs that let the mobile remote
+connect to them pretending to be a STB.
+
+The code is currently somewhat of a rats nest, and there is several
+implementations of the same thing. The idea is here is just to get
+something up and working reliably and then someone can write a standard
+library in whatever language they choose.
+
+# Questions
+
+1) What is possible before installing the FiOS mobile remote widget? Is
+this a service on the box that is always on? 2) Is there some kind of pin
+number in the initial set up process? I can't recall... 3) Is this thing
+running on the STB written in LUA using the SDK that Verizon will maybe
+possibly be releasing for FiOS STBs? 4) Are the security codes the same
+for each box?
+
+# Future issues
+
+Verizon could change the protocol or patch all the security issues at any
+time. I think this is unlikely because of the nature of the strange
+protocol, and I think fixing it would require a complete rewrite of the
+STB, android and iphone apps. Who knows tho.
+
+If someone from Verizon ever reads this, just open the protocol, and have
+it use some standard security such as um.. a password? Just to prevent
+virus writers and nefarious folk from causing a ruckus. Having the mobile
+or home computer or laptop be able to control the TV is the future, and
+you know it, keeping the protocol proprietary is just old thinking, more
+money and fun is in the open.
+
+# Technical
+
+In each file, there is a hard coded IP address, you need to open the file
+in a text editor and search for 192 and replace the IP with the IP of the
+STB you are trying to control. Make sure you don't have any silly
+firewalls in your way.
+
+All the programs are coded in ruby, to run them ' ruby program.rb' You
+may need to install some packages. You need to have a postgres DB running
+and put in the DB from the .sql files. You maybe able to use mysql if you
+switch postgresql to mysql in the vhash.rb file.
+
+remote_staysconnected.rb should be the first one you try. It may not
+connect, if it doesn't try it again like up to 10 or so times until it
+does. If it works, it stays connected, and switches the channel down
+every 5 seconds.
+
+remote_console_exp.rb gives you a console like interface to your STB. If
+it works, type help for commands.
+
+More to come..
