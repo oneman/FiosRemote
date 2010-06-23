@@ -10,7 +10,7 @@ Update the user/host/password as needed.
 
 this is the only important table at this time
 
-database data in: fiostv_otherway2.sql
+database data you need to insert ::  fiostv_database_data.sql
 
 Run that after creating the database/tables. Should work in mysql/postgres
 
