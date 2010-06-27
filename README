@@ -1,6 +1,8 @@
 FiOS TV HD STB Network Control Project - This is BIG!
 -----------------------------------------------------
 
+Code Name: VAG202
+
 # # # - - - ::: Background - Yadda Yadda skip this section
 
 Verizon is a interesting name, it has no official meaning, but it makes
@@ -142,4 +144,56 @@ Q) WTF are FiOS TV Widgets and how do they relate to this?
 A) FiOS TV Widgets are like apps for your STB, they use the same clunky interface as the menu system, they do things like show you twitter messages, weather, or help you shop on HSN. They are probably written in the LUA language. Verizon is seemingly going to open up widget development with a SDK, but they have not done so yet. The normal set up sequence of the FiOS mobile remote involves activating a mobile remote widget.
 https://www22.verizon.com/fiosdeveloper/General/FiosDevCenterExt.aspx
 
+Q) What is a good reason Verizon Sucks?
+A) They charged me $70 of overage for calling a Verizion FiOS landline from a Verizon Wireless Cell Phone.
 
+# # # - - - ::: CONTACT
+
+#fiostv on FREENODE irc, you can get to this chat room by going to this web page:
+
+http://webchat.freenode.net/?nick=fiosguy&channels=#fiostv
+ 
+or using an IRC program
+
+My nick is oneman or rawdod
+
+http://industrialstrengthinc.com
+http://rawdod.com
+
+r - a wdod AT gee mail dot com   (remove the spaces and dashes change gee mail to gmail and AT to @)
+
+David Richards
+
+# # # - - - ::: LEGAL 
+
+This code was created by hand from analyzing the in the clear packet transmissions of the verizon fios mobile remote.
+No part of the code is owned or created by verizon. With the exception of the 'connecting.png' image which is a peice
+of crap anyway, and if THIS IS A BiG DEAL then I will remove it.
+
+Reverse engineering for purposes of interoperability is a protected right under the DMCA. 
+
+Atleast I think it is, im not a fucking god damn lawyer. 
+
+The Program itself 'VAG202' is licensed under the GPL version 3. If you want to give me some money I can release 
+a version to you under a different license or do some other work for you. If you take the code and use
+it in your own program and don't release the source code, yet relese to the program to anyone but yourself,
+then your a massive dick. If your just screwing around with it, thats fine, but if you learn something, do share.
+If you double reverse engineer the protocol by reading this code and writing your own code then im not sure 
+your in any kind of violation, but I still think you should give me some money. 
+
+Verizon FiOS, This is BiG, Verizon Wireless are trademarks of Verizon Megacorp Inc. Used in fairness.
+
+      Permission is granted to copy, distribute and/or modify this
+      document under the terms of the GNU Free Documentation License,
+      Version 1.3 or any later version published by the Free Software
+      Foundation; with no Invariant Sections, no Front-Cover Texts and
+      no Back-Cover Texts.  A copy of the license is included in the
+      section entitled "GNU Free Documentation License".
+
+
+# # # - - - ::: MEDICAL
+
+
+USE OF THIS PROGRAM OR READING OF THIS DOCUMENT IS CONSIDERED BUT NOT PROVEN SAFE WITH MOST MEDICATIONS
+POSSIBLE SIDE EFFECTS INCLUDE: NAUSEA AND VOMITING, RAPID BEARD GROWTH AND COCKEYE. IF THESE SYMPTOMS 
+PERSIST OR ARE BOTHERSOME DISCONTUNINUE USE AND CONSULT YOUR LOCAL RASTAFARIAN

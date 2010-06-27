@@ -1,3 +1,5 @@
+# some of these are wrong btw, see remote_console* for udated ones
+
 17 volup
 18 voldown
 10 mute
