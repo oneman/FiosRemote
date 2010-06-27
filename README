@@ -1,7 +1,18 @@
 FiOS TV HD STB Network Control Project - This is BIG!
 -----------------------------------------------------
 
-Code Name: VAG202
+
+# # # ::: QUICK INFO
+
+Project Code Name: VAG202
+
+This projects purpose to to show how a Verizon FiOS HD STB can be 
+controlled via a computer or any other device via a network. It is 
+a result of reverse engineering the Verizon FiOS Mobile Remote App
+for Android. Its currently only usable by advanced technical users,
+but its intent is to be used as a source of information to build its 
+functionality into other open source programs. 
+
 
 # # # - - - ::: Background - Yadda Yadda skip this section
 
@@ -69,6 +80,7 @@ induced frenzy staring at hex codes from sniffed packets, trying to find
 correlation's and patterns in order to crack it. Well something along
 those lines happened.
 
+
 # # # - - - ::: Current Situation
 
 The protocol from the FiOS Mobile Remote Application has been reverse
@@ -116,32 +128,24 @@ money and fun is in the open.
 
 # # # - - - ::: Technical
 
-In each file, there is a hard coded IP address, you need to open the file
-in a text editor and search for 192 and replace the IP with the IP of the
-STB you are trying to control. Make sure you don't have any silly
-firewalls in your way.
-
-All the programs are coded in ruby, to run them ' ruby program.rb' You
-may need to install some packages. You need to have a DB running
-and put in the DB from the .sql files. SEE database_readme.txt FOR DETAILS
-
-remote_staysconnected.rb should be the first one you try. It may not
-connect, if it doesn't try it again like up to 10 or so times until it
-does. If it works, it stays connected, and switches the channel down
-every 5 seconds.
-
-remote_console_exp.rb gives you a console like interface to your STB. If
-it works, type help for commands.
+SEE README_TECHNICAL
 
 
 # # # - - - ::: FAQ 
 
 
 Q) What does this have to do with MythTV? 
-A) Nothing yet, these programs are completely independent from anything else at this time, however once the protocol and initial connection process is better understood, a standard library, and standard toolkit can be built that MythTV and any other program could then use to control the STB's
+A) Nothing yet, these programs are completely independent from anything else at this time, however 
+once the protocol and initial connection process is better understood, a standard library, and standard 
+toolkit can be built that MythTV and any other program could then use to control the STB's
 
 Q) WTF are FiOS TV Widgets and how do they relate to this?
-A) FiOS TV Widgets are like apps for your STB, they use the same clunky interface as the menu system, they do things like show you twitter messages, weather, or help you shop on HSN. They are probably written in the LUA language. Verizon is seemingly going to open up widget development with a SDK, but they have not done so yet. The normal set up sequence of the FiOS mobile remote involves activating a mobile remote widget.
+A) FiOS TV Widgets are like apps for your STB, they use the same clunky interface as the menu system, 
+they do things like show you twitter messages, weather, or help you shop on HSN. They are probably 
+written in the LUA language. Verizon is seemingly going to open up widget development with a SDK, 
+but they have not done so yet. The normal set up sequence of the FiOS mobile remote involves activating 
+a mobile remote widget.
+
 https://www22.verizon.com/fiosdeveloper/General/FiosDevCenterExt.aspx
 
 Q) What is a good reason Verizon Sucks?

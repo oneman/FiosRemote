@@ -1,0 +1,144 @@
+# +++ ---------------------------------------::: VAG202 Technical Readme
+
+
+# # # - - - ::: Abstract
+
+Read the README first.
+
+In each file, there is a hard coded IP address, you need to open the file
+in a text editor and search for 192 and replace the IP with the IP of the
+STB you are trying to control. Make sure you don't have any silly
+firewalls in your way.
+
+All the programs are coded in ruby, to run them ' ruby program.rb' You
+may need to install some packages. You need to have a DB running
+and put in the DB from the .sql files. SEE DATABASE SECTION FOR DETAILS
+
+remote_staysconnected.rb should be the first one you try. It may not
+connect, if it doesn't try it again like up to 10 or so times until it
+does. If it works, it stays connected, and switches the channel down
+every 5 seconds.
+
+remote_console_exp.rb gives you a console like interface to your STB. If
+it works, type help for commands.
+
+
+
+# # # - - - ::: INFO ABOUT ALL THE FILES IN THIS RATS NEST
+
+connectlog*  -  some packet logs of real connections
+COPYING  -   GPL3
+fiostv_database_data.sql  -  SQL Data you need to put in your database for this thing to work 
+getacode.rb  - a way to retrieve a desired hash code from the STB, see the protocol security info (not needed, test only)
+mobileremote.map - an imagemap file used for a test web app to control the STB (crap not needed)
+packet_log* -  just that
+remote*.rb  - these are the program(s) that control the STB, each one pretends to be the mobile remote app, there is 
+              many versions just because I wanted to keep some while i changed stuff and moved forward, only one is really
+              needed at a time. 
+  remote_staysconnected.rb  is one I left after seeing it work consistantly, if it connects, it then cycles channel down every
+                            5 seconds
+
+remote_buttoncodes.txt - each command is a hex code, but this file is out of date so see the hash in the remote_* files
+
+remote_console_exp.rb RECCCOMENDED FOR USE by testers - connects to the STB and gives you a 'console' type interface to the STB
+                      type help for commands
+
+remote_console_exp_prehash.rb - uses pre gotten security hashes from the real remote gotten ahead of time instead of using the SM1 
+                                vulnrability.
+
+remote_server.rb - test web server web app to use a web page to control the stb, complete crap needs to be redone.
+
+stb.rb - pretends to be a stb, run 'scan for stbs' on the real mobile remote app, then as soon as you click scan, run this program
+stb_getcodes.rb - retrieves security hashes from the mobile remote, way faster than pulling them from the STB.
+vhash.rb  - this is a util file needed by the remote_* and stb* programs to pull saved security hashes
+search_vhash* - used to search vhashdb for learning about the security mechinisms
+vhash2test.rb  - run this once you have to your DB up and running to see that it works
+
+# # # - - - ::: Common Problems
+
+The STB can lock up, in which case it turns off and you need to just turn it back on. This is soft turn on.
+The STB can lock up and get into a state where it needs to be unplugged for power for a few seconds before replug, this is rare,
+won't happen with any of the code in here but if you mess with it this is possible.
+It is also possible to get the STB into a state where it is working fine, but when you try to connect to it with these programs,
+the connection drops quickly after connecting, usually reset by peer error. If this keeps happening, you need to power cycle by 
+unpluggin the STB, its not the code itself (once its been sent one nasty packet it may get into this state)
+
+
+
+
+# # # - - - ::: Protocol Info
+
+(To be expanded at my discresion. )
+
+Connection process:
+
+The mobile remote is actually a 'server'. A single UDP packet is sent from the mobile remote to the STB on port 4538.
+The STB then connects via TCP to port 4532 of the server. The server must wait for 200-400ms, then send an init packet. 
+The STB then sends two packets, and then the server sends back a packet and then the connecting image packet. Note I say packet,
+of course in TCP there is no 'packet boundry' but I get used to saying that rather than chunk or something else.
+
+Within these packets is security mechanism number one, well call that SM1 from now on.
+
+Once the connection is complete, the remote can send command packets to the STB. Within this is SM2.
+
+# # # - - - ::: Protocol Security Info
+
+To be described later.
+
+
+# # # - - - ::: Database Setup
+
+This program requires a database at this moment, postgres or mysql.
+At the bottom of this file is the create table sql.
+The default is postgres, the database of winners. 
+If you are going to use mysql change adapter in vhash.rb ( LINE 5 or so) to mysql
+Update the user/host/password as needed.
+this is the only important table at this time
+database data you need to insert ::  fiostv_database_data.sql
+Run that after creating the database/tables. Should work in mysql/postgres
+You need to install the active record gem! Its easy! 
+gem install activerecord
+for your user or sudo gem install activerecord.
+if everything is working you should be able to do this: 
+
+[oneman@blacktower::~/kode/fios]$ ruby search_vhashdb.rb e458c751afc21b7e981dadef677d297c33ce0918
+FOUND input: 00000002 as decimal: 0-0:0.2 ouput: e458c751afc21b7e981dadef677d297c33ce0918
+[oneman@blacktower::~/kode/fios]$
+
+----------
+POSTGRES::::
+
+CREATE TABLE vhashes (
+    id integer DEFAULT nextval('vhahsh_id_seq'::regclass) NOT NULL,
+    input character varying(8),
+    output character varying(40)
+);
+
+
+MYSQL:::
+
+CREATE TABLE vhashes (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    input VARCHAR(8),
+    output VARCHAR(40)
+);
+
+
+# # # - - - ::: LEGAL
+
+      Permission is granted to copy, distribute and/or modify this
+      document under the terms of the GNU Free Documentation License,
+      Version 1.3 or any later version published by the Free Software
+      Foundation; with no Invariant Sections, no Front-Cover Texts and
+      no Back-Cover Texts.  A copy of the license is included in the
+      section entitled "GNU Free Documentation License".
+
+
+# # # - - - ::: Secret Code
+
+
+76 65 72 69 7A 6F 6E  
+
+61 73 73 61 75 6C 74  
+
+67 72 6F 75 70
